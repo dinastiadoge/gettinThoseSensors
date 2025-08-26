@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">sensorLogger</string>
+    <string name="waiting_for_values">Waiting for values…</string>
+    <string name="gyro_values">X: %1$.2f\nY: %2$.2f\nZ: %3$.2f</string>
 </resources>

@@ -23,12 +23,14 @@ abstract class AndroidSensor (
             return
         }
 
-        if(::sensorManager.isInitialized && sensor == null){
-            sensorManager = context.getSystemService(SensorManager::class.java)
+        if (!::sensorManager.isInitialized) {
+            sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
             sensor = sensorManager.getDefaultSensor(sensorType)
         }
 
-        sensor?.let { sensorManager.registerListener(this,it, SensorManager.SENSOR_DELAY_NORMAL) }
+        sensor?.let {
+            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
+        }
     }
     override fun stopListening(){
         if(!doesSensorExist || !::sensorManager.isInitialized){
@@ -38,12 +40,10 @@ abstract class AndroidSensor (
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
-        if (doesSensorExist){
+        if (!doesSensorExist || event?.sensor?.type != sensorType) {
             return
         }
-        if(event?.sensor?.type == sensorType){
-            onSensorValuesChanged?.invoke(event.values.toList())
-        }
+        onSensorValuesChanged?.invoke(event.values.toList())
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = Unit
